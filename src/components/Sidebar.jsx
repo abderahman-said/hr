@@ -102,24 +102,24 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         title={collapsed ? item.label : undefined}
         aria-current={active ? 'page' : undefined}
         className={`
-          group relative w-full flex items-center gap-3 rounded-lg
-          text-sm transition-colors duration-150
+          group relative w-full flex items-center gap-3 rounded-xl
+          text-sm transition-all duration-200
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F9DDE]
-          ${collapsed ? 'justify-center px-0 py-2.5' : 'px-3 py-2.5'}
+          ${collapsed ? 'justify-center px-0 py-3' : 'px-4 py-3'}
           ${
             active
-              ? 'bg-white/10 text-white font-medium'
-              : 'text-[#B9D3EC] hover:bg-white/5 hover:text-white'
+              ? 'bg-white/15 text-white font-medium shadow-lg'
+              : 'text-[#B9D3EC] hover:bg-white/10 hover:text-white'
           }
         `}
       >
         {active && (
-          <span className="absolute right-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-[#4F9DDE] transition-all duration-200" />
+          <span className="absolute right-0 top-2 bottom-2 w-[4px] rounded-full bg-[#4F9DDE] transition-all duration-200 shadow-lg shadow-[#4F9DDE]/50" />
         )}
         <item.icon
-          size={collapsed ? 20 : 18}
+          size={collapsed ? 22 : 20}
           strokeWidth={2}
-          className={`shrink-0 transition-colors duration-150 ${active ? 'text-[#7CC0F5]' : ''}`}
+          className={`shrink-0 transition-colors duration-200 ${active ? 'text-[#7CC0F5]' : ''}`}
         />
         <span
           className={`truncate transition-all duration-200 ${
@@ -130,7 +130,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         </span>
 
         {collapsed && (
-          <span className="pointer-events-none absolute right-full mr-2 whitespace-nowrap rounded-md bg-[#0F2942] px-2 py-1 text-xs text-white opacity-0 translate-x-1 shadow-lg transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0 z-10">
+          <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-[#0F2942] px-3 py-2 text-sm text-white opacity-0 translate-x-2 shadow-xl transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 z-10 border border-white/10">
             {item.label}
           </span>
         )}
@@ -142,8 +142,8 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
     <>
       {/* Mobile scrim */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 lg:hidden transition-opacity duration-300 ${
-          mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        className={`fixed inset-0 z-40 bg-black/50 lg:hidden transition-opacity duration-300 backdrop-blur-sm ${
+          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setMobileOpen(false)}
         aria-hidden="true"
@@ -152,12 +152,12 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       {/* Mobile trigger */}
       <button
         onClick={() => setMobileOpen(true)}
-        className={`fixed top-4 right-4 z-30 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#123256] text-white shadow-lg lg:hidden transition-opacity duration-200 ${
-          mobileOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
+        className={`fixed top-1 md:top-4 right-4 z-50 flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r from-[#163A63] to-[#214B78] text-white shadow-xl lg:hidden transition-all duration-200 hover:scale-105 active:scale-95 ${
+          mobileOpen ? 'pointer-events-none opacity-0 scale-90' : 'opacity-100 scale-100'
         }`}
         aria-label="فتح القائمة الجانبية"
       >
-        <PanelLeftOpen size={18} sm:size={20} />
+        <PanelLeftOpen size={22} strokeWidth={2.5} />
       </button>
 
       <aside
@@ -165,15 +165,15 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         className={`
           ${width} shrink-0 min-h-screen flex flex-col
           bg-gradient-to-b from-[#0F2942] to-[#1B3D63] text-white
-          shadow-xl
+          shadow-2xl
           fixed inset-y-0 right-0 z-50
           transition-[width,transform] duration-300 ease-in-out
           ${mobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
         `}
       >
         {/* Header */}
-        <div className="flex items-center gap-3 p-4 border-b border-white/10 overflow-hidden">
-          <div className="w-10 h-10 shrink-0 bg-white rounded-lg flex items-center justify-center text-[#123256] font-bold shadow">
+        <div className="flex items-center gap-3 p-5 border-b border-white/10 overflow-hidden">
+          <div className="w-12 h-12 shrink-0 bg-white rounded-xl flex items-center justify-center text-[#123256] font-bold shadow-lg">
             HR
           </div>
           <div
@@ -181,24 +181,24 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
               collapsed ? 'opacity-0 -translate-x-2 w-0' : 'opacity-100 translate-x-0 w-auto'
             }`}
           >
-            <div className="font-semibold text-sm leading-tight truncate">
+            <div className="font-semibold text-base leading-tight truncate">
               نظام الموارد البشرية
             </div>
-            <div className="text-[#6FA8DC] text-xs mt-0.5 truncate">
+            <div className="text-[#6FA8DC] text-xs mt-1 truncate">
               إدارة شاملة للعمالة
             </div>
           </div>
           <button
             onClick={() => setMobileOpen(false)}
-            className="lg:hidden text-[#8FB8E0] hover:text-white p-1"
+            className="lg:hidden text-[#8FB8E0] hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
             aria-label="إغلاق"
           >
-            <X size={20} />
+            <X size={24} strokeWidth={2} />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-3 px-2.5 overflow-y-auto overflow-x-hidden space-y-0.5">
+        <nav className="flex-1 py-4 px-3 overflow-y-auto overflow-x-hidden space-y-1">
           {SECTIONS.map((section, idx) => {
             const isMain = section.key === 'main';
             const isOpen = isMain || openSection === section.key;
@@ -206,18 +206,19 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
             return (
               <div key={section.key}>
                 {!isMain && collapsed && idx > 1 && (
-                  <div className="my-1.5 border-t border-white/10" />
+                  <div className="my-2 border-t border-white/10" />
                 )}
 
                 {!isMain && !collapsed && (
                   <button
                     onClick={() => toggleSection(section.key)}
-                    className="w-full flex items-center justify-between px-2.5 py-2 mt-3 text-[#6FA8DC] hover:text-white text-[11px] font-semibold tracking-wide rounded-lg hover:bg-white/5 transition-colors"
+                    className="w-full flex items-center justify-between px-3 py-3 mt-4 text-[#6FA8DC] hover:text-white text-xs font-semibold tracking-wide rounded-lg hover:bg-white/5 transition-colors"
                     aria-expanded={isOpen}
                   >
                     <span>{section.label}</span>
                     <ChevronDown
-                      size={14}
+                      size={16}
+                      strokeWidth={2.5}
                       className={`transition-transform duration-300 ${
                         isOpen ? 'rotate-180' : ''
                       }`}
@@ -226,7 +227,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                 )}
 
                 {isMain || collapsed ? (
-                  <div className="space-y-0.5">{section.items.map(renderItem)}</div>
+                  <div className="space-y-1">{section.items.map(renderItem)}</div>
                 ) : (
                   // Grid-rows trick: animates 0fr -> 1fr so the group
                   // expands/collapses smoothly without a fixed max-height.
@@ -236,7 +237,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <div className="space-y-0.5 mt-1">{section.items.map(renderItem)}</div>
+                      <div className="space-y-1 mt-2">{section.items.map(renderItem)}</div>
                     </div>
                   </div>
                 )}
@@ -246,7 +247,7 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-white/10 p-3 flex items-center justify-between overflow-hidden">
+        <div className="border-t border-white/10 p-4 flex items-center justify-between overflow-hidden">
           <span
             className={`text-[#5C82A8] text-xs whitespace-nowrap transition-all duration-200 ${
               collapsed ? 'opacity-0 -translate-x-2 w-0' : 'opacity-100 translate-x-0 w-auto'
@@ -256,10 +257,10 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
           </span>
           <button
             onClick={() => setCollapsed((c) => !c)}
-            className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg text-[#8FB8E0] hover:bg-white/10 hover:text-white transition-colors shrink-0"
+            className="hidden lg:flex items-center justify-center w-9 h-9 rounded-xl text-[#8FB8E0] hover:bg-white/10 hover:text-white transition-colors shrink-0"
             aria-label={collapsed ? 'توسيع القائمة' : 'طي القائمة'}
           >
-            {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+            {collapsed ? <PanelLeftOpen size={20} strokeWidth={2} /> : <PanelLeftClose size={20} strokeWidth={2} />}
           </button>
         </div>
       </aside>

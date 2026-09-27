@@ -42,37 +42,37 @@ const Attendance = ({ employees }) => {
   };
 
   return (
-    <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 fade-in">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">الحضور والغياب</h1>
-          <p className="text-gray-500 text-sm">{filtered.length} موظف</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">الحضور والغياب</h1>
+          <p className="text-gray-500 text-sm sm:text-base mt-1">{filtered.length} موظف</p>
         </div>
         <input type="date" value={selectedDate} onChange={e => setSelectedDate(e.target.value)}
-          className="border border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+          className="border border-gray-200 rounded-xl px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4">
         {statusOptions.map(s => (
-          <div key={s} className={`rounded-xl p-3 text-center border ${statusColors[s] || 'bg-gray-100 text-gray-600 border-gray-200'}`}>
-            <div className="text-2xl font-bold">{summary[s] || 0}</div>
-            <div className="text-xs font-medium mt-1">{s}</div>
+          <div key={s} className={`rounded-xl p-4 text-center border ${statusColors[s] || 'bg-gray-100 text-gray-600 border-gray-200'}`}>
+            <div className="text-2xl sm:text-3xl font-bold">{summary[s] || 0}</div>
+            <div className="text-xs sm:text-sm font-medium mt-1.5">{s}</div>
           </div>
         ))}
       </div>
 
       {/* Filters & Quick Actions */}
-      <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100 flex flex-col sm:flex-wrap gap-3 items-start sm:items-center">
-        <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-wrap gap-4 items-start sm:items-center">
+        <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
           <option value="">كل الأقسام</option>
-          {departments.map(d => <option key={d}>{d}</option>)}
+          {departments.map((d, idx) => <option key={`${d}-${idx}`}>{d}</option>)}
         </select>
         <div className="flex gap-2 flex-wrap w-full sm:w-auto mr-0 sm:mr-auto">
           <span className="text-sm text-gray-500 self-center">تحديد الكل:</span>
           {['حاضر', 'غائب'].map(s => (
-            <button key={s} onClick={() => markAll(s)} className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-medium border ${statusColors[s]}`}>{s}</button>
+            <button key={s} onClick={() => markAll(s)} className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium border ${statusColors[s]}`}>{s}</button>
           ))}
         </div>
       </div>
@@ -83,13 +83,13 @@ const Attendance = ({ employees }) => {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">#</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">الموظف</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">القسم</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">الحالة</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">وقت الحضور</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">وقت الانصراف</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">ملاحظة</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">#</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">الموظف</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">القسم</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">الحالة</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">وقت الحضور</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">وقت الانصراف</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">ملاحظة</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -97,37 +97,37 @@ const Attendance = ({ employees }) => {
                 const rec = attendance[emp.id] || {};
                 return (
                   <tr key={emp.id} className={`hover:bg-gray-50 transition ${rec.status === 'غائب' ? 'bg-red-50' : ''}`}>
-                    <td className="px-4 py-2.5 text-gray-500 text-xs">{i + 1}</td>
-                    <td className="px-4 py-2.5">
-                      <div className="font-medium text-gray-800">{emp.name}</div>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">{i + 1}</td>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
+                      <div className="font-medium text-gray-800 text-xs sm:text-sm">{emp.name}</div>
                       <div className="text-xs text-gray-400">{emp.code}</div>
                     </td>
-                    <td className="px-4 py-2.5 text-gray-500">{emp.department}</td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 sm:px-6 py-3 sm:py-4 text-gray-500 text-xs sm:text-sm">{emp.department}</td>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
                       <select
                         value={rec.status || 'حاضر'}
                         onChange={e => updateStatus(emp.id, 'status', e.target.value)}
-                        className={`text-xs px-2 py-1.5 rounded-lg border font-medium focus:outline-none ${statusColors[rec.status] || ''}`}
+                        className={`text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg border font-medium focus:outline-none ${statusColors[rec.status] || ''}`}
                       >
                         {statusOptions.map(s => <option key={s}>{s}</option>)}
                       </select>
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
                       <input type="time" value={rec.arrivalTime || '08:00'}
                         disabled={rec.status === 'غائب' || rec.status === 'إجازة'}
                         onChange={e => updateStatus(emp.id, 'arrivalTime', e.target.value)}
-                        className="border border-gray-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400" />
+                        className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400" />
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
                       <input type="time" value={rec.leaveTime || '17:00'}
                         disabled={rec.status === 'غائب' || rec.status === 'إجازة'}
                         onChange={e => updateStatus(emp.id, 'leaveTime', e.target.value)}
-                        className="border border-gray-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400" />
+                        className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400" />
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
                       <input type="text" value={rec.note || ''} placeholder="ملاحظة..."
                         onChange={e => updateStatus(emp.id, 'note', e.target.value)}
-                        className="border border-gray-200 rounded-lg px-2 py-1 text-xs w-28 focus:outline-none focus:ring-1 focus:ring-blue-300" />
+                        className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm w-28 sm:w-32 focus:outline-none focus:ring-1 focus:ring-blue-300" />
                     </td>
                   </tr>
                 );
@@ -139,7 +139,7 @@ const Attendance = ({ employees }) => {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <button className="bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium shadow-sm transition flex items-center gap-2 text-sm">
+        <button className="bg-green-600 hover:bg-green-700 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl font-medium shadow-md transition flex items-center gap-2 text-sm sm:text-base">
           💾 حفظ سجل الحضور
         </button>
       </div>
