@@ -1,5 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
+
+const useLocalState = (key, initial) => {
+  const [val, setVal] = useState(() => {
+    try {
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : initial;
+    } catch { return initial; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+  }, [key, val]);
+  return [val, setVal];
+};
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import Employees from './pages/Employees';
@@ -24,30 +37,39 @@ import MonthlyReport from './pages/MonthlyReport';
 import FingerprintImport from './pages/FingerprintImport';
 import PaymentForms from './pages/PaymentForms';
 import Clearance from './pages/Clearance';
+import Grants from './pages/Grants';
+import Decisions from './pages/Decisions';
+import SalaryDifferences from './pages/SalaryDifferences';
+import RecruitmentRequests from './pages/RecruitmentRequests';
 import {
   initialEmployees, initialTasks, initialLoans,
   initialDeductions, initialIncentives,
   initialDelays, initialOvertime, initialTransportation,
   initialFixedIncentives, initialAbsences, initialLeaveBalance,
-  initialMedicalCases,
+  initialMedicalCases, initialGrants, initialDecisions,
+  initialSalaryDifferences,
 } from './data/initialData';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   // ===== بيانات مشتركة بين كل الوحدات =====
-  const [employees, setEmployees] = useState(initialEmployees);
-  const [tasks, setTasks] = useState(initialTasks);
-  const [loans, setLoans] = useState(initialLoans);
-  const [deductions, setDeductions] = useState(initialDeductions);
-  const [incentives, setIncentives] = useState(initialIncentives);
-  const [delays, setDelays] = useState(initialDelays);
-  const [overtime, setOvertime] = useState(initialOvertime);
-  const [transportation, setTransportation] = useState(initialTransportation);
-  const [fixedIncentives, setFixedIncentives] = useState(initialFixedIncentives);
-  const [absences, setAbsences] = useState(initialAbsences);
-  const [leaveBalance, setLeaveBalance] = useState(initialLeaveBalance);
-  const [medicalCases, setMedicalCases] = useState(initialMedicalCases);
+  const [employees, setEmployees] = useLocalState('hr_employees', initialEmployees);
+  const [tasks, setTasks] = useLocalState('hr_tasks', initialTasks);
+  const [loans, setLoans] = useLocalState('hr_loans', initialLoans);
+  const [deductions, setDeductions] = useLocalState('hr_deductions', initialDeductions);
+  const [incentives, setIncentives] = useLocalState('hr_incentives', initialIncentives);
+  const [delays, setDelays] = useLocalState('hr_delays', initialDelays);
+  const [overtime, setOvertime] = useLocalState('hr_overtime', initialOvertime);
+  const [transportation, setTransportation] = useLocalState('hr_transportation', initialTransportation);
+  const [fixedIncentives, setFixedIncentives] = useLocalState('hr_fixedIncentives', initialFixedIncentives);
+  const [absences, setAbsences] = useLocalState('hr_absences', initialAbsences);
+  const [leaveBalance, setLeaveBalance] = useLocalState('hr_leaveBalance', initialLeaveBalance);
+  const [medicalCases, setMedicalCases] = useLocalState('hr_medicalCases', initialMedicalCases);
+  const [grants, setGrants] = useLocalState('hr_grants', initialGrants);
+  const [decisions, setDecisions] = useLocalState('hr_decisions', initialDecisions);
+  const [salaryDifferences, setSalaryDifferences] = useLocalState('hr_salaryDifferences', initialSalaryDifferences);
+  const [recruitmentRequests, setRecruitmentRequests] = useLocalState('hr_recruitmentRequests', []);
 
   // Props موحدة تُمرر لكل الصفحات
   const sharedProps = {
@@ -63,6 +85,9 @@ function App() {
     absences, setAbsences,
     leaveBalance, setLeaveBalance,
     medicalCases, setMedicalCases,
+    grants, setGrants,
+    decisions, setDecisions,
+    salaryDifferences, setSalaryDifferences,
   };
 
   const renderPage = () => {
@@ -90,6 +115,10 @@ function App() {
       case 'fingerprintImport': return <FingerprintImport employees={employees} delays={delays} setDelays={setDelays} />;
       case 'paymentForms':    return <PaymentForms {...sharedProps} />;
       case 'clearance':       return <Clearance employees={employees} loans={loans} leaveBalance={leaveBalance} deductions={deductions} delays={delays} absences={absences} />;
+      case 'grants':          return <Grants grants={grants} setGrants={setGrants} employees={employees} />;
+      case 'decisions':       return <Decisions decisions={decisions} setDecisions={setDecisions} employees={employees} />;
+      case 'salaryDifferences': return <SalaryDifferences {...sharedProps} />;
+      case 'recruitment':     return <RecruitmentRequests recruitmentRequests={recruitmentRequests} setRecruitmentRequests={setRecruitmentRequests} />;
       default:                return <Dashboard {...sharedProps} />;
     }
   };
@@ -118,13 +147,17 @@ function App() {
     fingerprintImport: 'استيراد ملف البصمة',
     paymentForms: 'نماذج الصرف',
     clearance: 'التصفية — مستحقات نهاية الخدمة',
+    grants: 'المنح والإعانات الاجتماعية',
+    decisions: 'القرارات الإدارية والجزاءات',
+    salaryDifferences: 'فرق القبض والتسويات النقدية',
+    recruitment: 'طلبات التوظيف',
   };
 
   return (
     <div className="flex min-h-screen bg-[#F5F7FA]" dir="rtl">
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       <main className="flex-1 flex flex-col overflow-hidden mr-0 lg:mr-72 transition-all duration-300">
-        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-[#E2E8F0] px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-sm">
+        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-[#E2E8F0] px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-2 text-[#718096]">
             <span className="text-[#718096] text-xs sm:text-sm">نظام HR</span>
             <span className="text-[#E2E8F0] hidden sm:inline">/</span>

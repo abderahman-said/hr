@@ -28,26 +28,22 @@ const SEPARATION_REASONS = [
 ];
 
 const numberToArabicWords = (num) => {
-  if (!num || isNaN(num) || num === 0) return 'صفر';
-  const n = Math.abs(Math.floor(Number(num)));
-  const ones = ['', 'واحد', 'اثنان', 'ثلاثة', 'أربعة', 'خمسة', 'ستة', 'سبعة', 'ثمانية', 'تسعة',
-    'عشرة', 'أحد عشر', 'اثنا عشر', 'ثلاثة عشر', 'أربعة عشر', 'خمسة عشر', 'ستة عشر',
-    'سبعة عشر', 'ثمانية عشر', 'تسعة عشر'];
-  const tens = ['', '', 'عشرون', 'ثلاثون', 'أربعون', 'خمسون', 'ستون', 'سبعون', 'ثمانون', 'تسعون'];
-  const hundreds = ['', 'مئة', 'مئتان', 'ثلاثمئة', 'أربعمئة', 'خمسمئة', 'ستمئة', 'سبعمئة', 'ثمانمئة', 'تسعمئة'];
-  const convert = (x) => {
-    if (x < 20) return ones[x];
-    if (x < 100) return tens[Math.floor(x/10)] + (x%10 ? ' و' + ones[x%10] : '');
-    const r = x % 100;
-    return hundreds[Math.floor(x/100)] + (r ? ' و' + convert(r) : '');
-  };
-  if (n < 1000) return convert(n) + ' جنيهاً';
-  if (n < 1000000) {
-    const th = Math.floor(n/1000), r = n%1000;
-    const ts = th === 1 ? 'ألف' : th === 2 ? 'ألفان' : th <= 10 ? convert(th) + ' آلاف' : convert(th) + ' ألفاً';
-    return ts + (r ? ' و' + convert(r) : '') + ' جنيهاً';
-  }
-  return n.toLocaleString('ar-EG') + ' جنيهاً';
+  const ones = ['صفر','واحد','اثنان','ثلاثة','أربعة','خمسة','ستة','سبعة','ثمانية','تسعة'];
+  const tens = ['','عشرة','عشرون','ثلاثون','أربعون','خمسون','ستون','سبعون','ثمانون','تسعون'];
+  const hundreds = ['','مائة','مائتان','ثلاثمائة','أربعمائة','خمسمائة','ستمائة','سبعمائة','ثمانمائة','تسعمائة'];
+  if (num === 0) return 'صفر جنيهًا';
+  if (num > 99999) return num.toLocaleString() + ' جنيه';
+  let result = '';
+  const h = Math.floor(num / 1000);
+  const rest = num % 1000;
+  const hh = Math.floor(rest / 100);
+  const t = Math.floor((rest % 100) / 10);
+  const o = rest % 10;
+  if (h > 0) result += (h === 1 ? 'ألف' : h === 2 ? 'ألفان' : h + ' آلاف') + (rest > 0 ? ' و' : '');
+  if (hh > 0) result += hundreds[hh] + (t > 0 || o > 0 ? ' و' : '');
+  if (t === 1) result += (o === 0 ? 'عشرة' : ['','إحدى عشرة','اثنتا عشرة','ثلاثة عشرة','أربعة عشرة','خمسة عشرة','ستة عشرة','سبعة عشرة','ثمانية عشرة','تسعة عشرة'][o]);
+  else { if (t > 0) result += tens[t] + (o > 0 ? ' و' : ''); if (o > 0) result += ones[o]; }
+  return result + ' فقط لا غير';
 };
 
 const calcServiceDuration = (hireDate, lastDate) => {
@@ -113,6 +109,7 @@ const Clearance = ({
   const [lastWorkingDay, setLastWorkingDay] = useState('');
   const [unusedLeaveDays, setUnusedLeaveDays] = useState(0);
   const [pendingSalaryDays, setPendingSalaryDays] = useState(0);
+  const [custody, setCustody] = useState(0);
   const [extraAdditions, setExtraAdditions] = useState([{ label: '', amount: 0 }]);
   const [extraDeductions, setExtraDeductions] = useState([{ label: '', amount: 0 }]);
   const [companyName, setCompanyName] = useState('شركة ـــــــ للصناعات');
@@ -137,6 +134,7 @@ const Clearance = ({
 
   // رصيد الإجازات (أيام × اليومي)
   const dailyRate = salary / 26;
+  const hourlyRate = dailyRate / 8;
   const leaveValue = Math.round(unusedLeaveDays * dailyRate);
 
   // راتب الأيام المتبقية من الشهر
@@ -149,7 +147,7 @@ const Clearance = ({
 
   // التأخيرات
   const delayMins = delays.filter(d => d.employeeCode === selectedEmpCode).reduce((s,d)=>s+Number(d.delayMinutes||0),0);
-  const delayDed = Math.round((salary / 26 / 8 / 60) * delayMins);
+  const delayDed = Math.round((hourlyRate / 60) * delayMins);
 
   // إجماليات إضافية
   const totalExtraAdd = extraAdditions.reduce((s,i)=>s+Number(i.amount||0),0);
@@ -157,7 +155,7 @@ const Clearance = ({
 
   // الإجمالي
   const totalAdditions = gratuity + noticePay + leaveValue + pendingSalaryValue + totalExtraAdd;
-  const totalDeductions = pendingLoans + delayDed + totalExtraDed;
+  const totalDeductions = pendingLoans + delayDed + totalExtraDed + custody;
   const netAmount = totalAdditions - totalDeductions;
 
   const addExtraRow = (type) => {
@@ -279,8 +277,11 @@ const Clearance = ({
                   {[
                     ['كود الموظف', emp.code],
                     ['القسم', emp.department],
+                    ['المسمى الوظيفي', emp.jobTitle || '—'],
                     ['نوع العمالة', emp.type],
                     ['الراتب الأساسي', `${Number(emp.salary).toLocaleString('ar-EG')} جنيه`],
+                    ['أجر اليوم', `${dailyRate.toFixed(2)} جنيه`],
+                    ['أجر الساعة', `${hourlyRate.toFixed(2)} جنيه`],
                     ['تاريخ التعيين', emp.hireDate],
                     ['رقم الهوية', emp.nationalId],
                   ].map(([label, val]) => (
@@ -455,6 +456,24 @@ const Clearance = ({
                     <div className="text-xs text-gray-400">من سجلات السلف</div>
                   </div>
                   <div className="font-bold text-red-600 text-base">({pendingLoans.toLocaleString('ar-EG')} ج)</div>
+                </div>
+
+                {/* العهدة */}
+                <div className="flex items-center justify-between bg-red-50 border border-red-100 rounded-xl px-4 py-2.5">
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-gray-700">العهدة المستردة / خصم عهدة</div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <input
+                        type="number" min="0"
+                        value={custody}
+                        onChange={e => { setCustody(Number(e.target.value)); setShowResult(false); }}
+                        className="w-24 border border-red-200 rounded-lg px-2 py-1 text-sm text-center focus:outline-none focus:ring-1 focus:ring-red-300"
+                        placeholder="مبلغ العهدة"
+                      />
+                      <span className="text-xs text-gray-500">ج</span>
+                    </div>
+                  </div>
+                  <div className="font-bold text-red-600 text-base">({custody.toLocaleString('ar-EG')} ج)</div>
                 </div>
 
                 {/* تأخيرات */}

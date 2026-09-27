@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard, Users, ClipboardList, Fingerprint, Ban, Clock,
   Umbrella, LogOut, DollarSign, CreditCard, FileText, Scissors,
-  Bus, Timer, FileCheck, Award, Target, Pill, Handshake, Flag,
+  Bus, Timer, FileCheck, Award, Target, Pill, Handshake, Flag, Gift, Scale, ArrowLeftRight,
   CheckSquare, FileBarChart, BarChart3, ChevronDown,
   PanelLeftClose, PanelLeftOpen, X,
 } from 'lucide-react';
@@ -42,6 +42,7 @@ const SECTIONS = [
       { id: 'transportation', label: 'بدل المواصلات', icon: Bus },
       { id: 'overtime', label: 'الإضافي', icon: Timer },
       { id: 'paymentForms', label: 'نماذج الصرف', icon: FileCheck },
+      { id: 'salaryDifferences', label: 'فرق القبض والتسويات', icon: ArrowLeftRight },
     ],
   },
   {
@@ -57,7 +58,10 @@ const SECTIONS = [
     label: 'شؤون الموظفين',
     items: [
       { id: 'medicalCases', label: 'الحالات المرضية', icon: Pill },
+      { id: 'grants', label: 'المنح والإعانات', icon: Gift },
+      { id: 'decisions', label: 'القرارات الإدارية', icon: Scale },
       { id: 'interviews', label: 'المقابلات والتوظيف', icon: Handshake },
+      { id: 'recruitment', label: 'طلبات التوظيف', icon: ClipboardList },
       { id: 'clearance', label: 'التصفية (نهاية الخدمة)', icon: Flag },
     ],
   },
@@ -152,12 +156,12 @@ const Sidebar = ({ activeTab, setActiveTab }) => {
       {/* Mobile trigger */}
       <button
         onClick={() => setMobileOpen(true)}
-        className={`fixed top-1 md:top-4 right-4 z-50 flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-r from-[#163A63] to-[#214B78] text-white shadow-xl lg:hidden transition-all duration-200 hover:scale-105 active:scale-95 ${
+        className={`fixed top-1.5 md:top-4 right-4  z-50 flex items-center justify-center md:w-12 md:h-12  w-11 h-11 rounded-xl bg-gradient-to-r from-[#163A63] to-[#214B78] text-white shadow-xl lg:hidden transition-all duration-200 hover:scale-105 active:scale-95 ${
           mobileOpen ? 'pointer-events-none opacity-0 scale-90' : 'opacity-100 scale-100'
         }`}
         aria-label="فتح القائمة الجانبية"
       >
-        <PanelLeftOpen size={22} strokeWidth={2.5} />
+        <PanelLeftOpen   strokeWidth={2.5} className="w-6 h-6" />
       </button>
 
       <aside

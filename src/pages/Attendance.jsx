@@ -6,7 +6,16 @@ const Attendance = ({ employees }) => {
   const [attendance, setAttendance] = useState(() => {
     const init = {};
     employees.forEach(e => {
-      init[e.id] = { status: 'حاضر', arrivalTime: '08:00', leaveTime: '17:00', note: '' };
+      init[e.id] = { 
+        status: 'حاضر', 
+        arrivalTime: '08:00', 
+        leaveTime: '17:00', 
+        note: '',
+        absenceReason: '',
+        permissionMethod: '',
+        departureType: 'نهائي',
+        balanceValue: ''
+      };
     });
     return init;
   });
@@ -24,6 +33,9 @@ const Attendance = ({ employees }) => {
     'انصراف مبكر': 'bg-orange-100 text-orange-700 border-orange-200',
     'مأمورية': 'bg-purple-100 text-purple-700 border-purple-200',
   };
+  const absenceReasons = ['مرضي', 'عائلي', 'أخرى'];
+  const permissionMethods = ['إذن شفهي', 'إذن مكتوب', 'إيميل'];
+  const departureTypes = ['نهائي', 'وعودة'];
 
   const updateStatus = (empId, field, value) => {
     setAttendance(prev => ({ ...prev, [empId]: { ...prev[empId], [field]: value } }));
@@ -64,7 +76,7 @@ const Attendance = ({ employees }) => {
       </div>
 
       {/* Filters & Quick Actions */}
-      <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-col sm:flex-wrap gap-4 items-start sm:items-center">
+      <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-wrap gap-4 items-start sm:items-center">
         <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
           <option value="">كل الأقسام</option>
           {departments.map((d, idx) => <option key={`${d}-${idx}`}>{d}</option>)}
@@ -89,6 +101,10 @@ const Attendance = ({ employees }) => {
                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">الحالة</th>
                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">وقت الحضور</th>
                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">وقت الانصراف</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">سبب الغياب</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">طريقة الإذن</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">نوع الانصراف</th>
+                <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">الرصيد النقدي</th>
                 <th className="px-4 sm:px-6 py-3 sm:py-4 text-right font-semibold text-gray-600 text-xs sm:text-sm">ملاحظة</th>
               </tr>
             </thead>
@@ -123,6 +139,43 @@ const Attendance = ({ employees }) => {
                         disabled={rec.status === 'غائب' || rec.status === 'إجازة'}
                         onChange={e => updateStatus(emp.id, 'leaveTime', e.target.value)}
                         className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400" />
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
+                      <select
+                        value={rec.absenceReason || ''}
+                        disabled={rec.status !== 'غائب'}
+                        onChange={e => updateStatus(emp.id, 'absenceReason', e.target.value)}
+                        className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400"
+                      >
+                        <option value="">-</option>
+                        {absenceReasons.map(r => <option key={r}>{r}</option>)}
+                      </select>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
+                      <select
+                        value={rec.permissionMethod || ''}
+                        disabled={rec.status === 'حاضر'}
+                        onChange={e => updateStatus(emp.id, 'permissionMethod', e.target.value)}
+                        className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400"
+                      >
+                        <option value="">-</option>
+                        {permissionMethods.map(m => <option key={m}>{m}</option>)}
+                      </select>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
+                      <select
+                        value={rec.departureType || 'نهائي'}
+                        disabled={rec.status === 'غائب' || rec.status === 'إجازة'}
+                        onChange={e => updateStatus(emp.id, 'departureType', e.target.value)}
+                        className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-blue-300 disabled:bg-gray-100 disabled:text-gray-400"
+                      >
+                        {departureTypes.map(t => <option key={t}>{t}</option>)}
+                      </select>
+                    </td>
+                    <td className="px-4 sm:px-6 py-3 sm:py-4">
+                      <input type="number" value={rec.balanceValue || ''} placeholder="0"
+                        onChange={e => updateStatus(emp.id, 'balanceValue', e.target.value)}
+                        className="border border-gray-200 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm w-20 focus:outline-none focus:ring-1 focus:ring-blue-300" />
                     </td>
                     <td className="px-4 sm:px-6 py-3 sm:py-4">
                       <input type="text" value={rec.note || ''} placeholder="ملاحظة..."
