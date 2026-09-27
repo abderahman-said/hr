@@ -148,8 +148,11 @@ const Departments = ({ departments, setDepartments, employees }) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-[#718096] mb-1">مدير القسم</label>
-                <input type="text" value={form.manager} onChange={e => setForm(prev => ({ ...prev, manager: e.target.value }))}
-                  className="w-full border border-[#E2E8F0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10" />
+                <select value={form.manager} onChange={e => setForm(prev => ({ ...prev, manager: e.target.value }))}
+                  className="w-full border border-[#E2E8F0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
+                  <option value="">اختر الموظف</option>
+                  {employees.map(emp => <option key={emp.id} value={emp.name}>{emp.name} - {emp.jobTitle}</option>)}
+                </select>
               </div>
             </div>
             <div className="flex gap-3 mt-4 sm:mt-6">
