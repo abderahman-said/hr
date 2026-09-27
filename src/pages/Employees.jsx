@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { departments, contractTypes, workShifts, maritalStatuses } from '../data/initialData';
+import { contractTypes, workShifts, maritalStatuses } from '../data/initialData';
 import { Search, Plus, LayoutGrid, Table, Pencil, Trash2, X, Building2, HardHat, Briefcase, Phone, DollarSign } from 'lucide-react';
 
-const Employees = ({ employees, setEmployees }) => {
+const Employees = ({ employees, setEmployees, departments }) => {
   const [search, setSearch] = useState('');
   const [filterDept, setFilterDept] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -28,6 +28,8 @@ const Employees = ({ employees, setEmployees }) => {
     (filterDept ? e.department === filterDept : true) &&
     (filterType ? e.type === filterType : true)
   );
+
+  const departmentNames = departments.map(d => d.name);
 
   const openAdd = () => { 
     setEditingEmp(null); 
@@ -126,7 +128,7 @@ const Employees = ({ employees, setEmployees }) => {
         </div>
         <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-[#E2E8F0] rounded-xl px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
           <option value="">كل الأقسام</option>
-          {departments.map((d, idx) => <option key={`${d}-${idx}`}>{d}</option>)}
+          {departmentNames.map((d, idx) => <option key={idx}>{d}</option>)}
         </select>
         <select value={filterType} onChange={e => setFilterType(e.target.value)} className="border border-[#E2E8F0] rounded-xl px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
           <option value="">كل الأنواع</option>
@@ -294,7 +296,7 @@ const Employees = ({ employees, setEmployees }) => {
                     <label className="block text-sm font-medium text-[#718096] mb-1">القسم</label>
                     <select value={form.department} onChange={e => setForm(prev => ({ ...prev, department: e.target.value }))} className="w-full border border-[#E2E8F0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
                       <option value="">اختر القسم</option>
-                      {departments.map((d, idx) => <option key={`${d}-${idx}`}>{d}</option>)}
+                      {departments.map((d, idx) => <option key={idx}>{d.name}</option>)}
                     </select>
                   </div>
                   <div>

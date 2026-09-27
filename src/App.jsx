@@ -41,13 +41,14 @@ import Grants from './pages/Grants';
 import Decisions from './pages/Decisions';
 import SalaryDifferences from './pages/SalaryDifferences';
 import RecruitmentRequests from './pages/RecruitmentRequests';
+import Departments from './pages/Departments';
 import {
   initialEmployees, initialTasks, initialLoans,
   initialDeductions, initialIncentives,
   initialDelays, initialOvertime, initialTransportation,
   initialFixedIncentives, initialAbsences, initialLeaveBalance,
   initialMedicalCases, initialGrants, initialDecisions,
-  initialSalaryDifferences,
+  initialSalaryDifferences, departments as initialDepartments,
 } from './data/initialData';
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
   const [decisions, setDecisions] = useLocalState('hr_decisions', initialDecisions);
   const [salaryDifferences, setSalaryDifferences] = useLocalState('hr_salaryDifferences', initialSalaryDifferences);
   const [recruitmentRequests, setRecruitmentRequests] = useLocalState('hr_recruitmentRequests', []);
+  const [departments, setDepartments] = useLocalState('hr_departments', initialDepartments.map(d => ({ name: d, description: '', manager: '' })));
 
   // Props موحدة تُمرر لكل الصفحات
   const sharedProps = {
@@ -88,6 +90,7 @@ function App() {
     grants, setGrants,
     decisions, setDecisions,
     salaryDifferences, setSalaryDifferences,
+    departments, setDepartments,
   };
 
   const renderPage = () => {
@@ -118,7 +121,8 @@ function App() {
       case 'grants':          return <Grants grants={grants} setGrants={setGrants} employees={employees} />;
       case 'decisions':       return <Decisions decisions={decisions} setDecisions={setDecisions} employees={employees} />;
       case 'salaryDifferences': return <SalaryDifferences {...sharedProps} />;
-      case 'recruitment':     return <RecruitmentRequests recruitmentRequests={recruitmentRequests} setRecruitmentRequests={setRecruitmentRequests} />;
+      case 'recruitment':     return <RecruitmentRequests recruitmentRequests={recruitmentRequests} setRecruitmentRequests={setRecruitmentRequests} departments={departments} />;
+      case 'departments':    return <Departments departments={departments} setDepartments={setDepartments} employees={employees} />;
       default:                return <Dashboard {...sharedProps} />;
     }
   };
@@ -151,6 +155,7 @@ function App() {
     decisions: 'القرارات الإدارية والجزاءات',
     salaryDifferences: 'فرق القبض والتسويات النقدية',
     recruitment: 'طلبات التوظيف',
+    departments: 'إدارة الأقسام',
   };
 
   return (

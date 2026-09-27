@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Attendance = ({ employees }) => {
+const Attendance = ({ employees, departments }) => {
   const today = new Date().toISOString().split('T')[0];
   const [selectedDate, setSelectedDate] = useState(today);
   const [attendance, setAttendance] = useState(() => {
@@ -21,7 +21,7 @@ const Attendance = ({ employees }) => {
   });
   const [filterDept, setFilterDept] = useState('');
 
-  const departments = [...new Set(employees.map(e => e.department))];
+  const departmentNames = departments.map(d => d.name);
   const filtered = employees.filter(e => filterDept ? e.department === filterDept : true);
 
   const statusOptions = ['حاضر', 'غائب', 'إجازة', 'تأخير', 'انصراف مبكر', 'مأمورية'];
@@ -79,7 +79,7 @@ const Attendance = ({ employees }) => {
       <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-gray-100 flex flex-wrap gap-4 items-start sm:items-center">
         <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2.5 sm:py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
           <option value="">كل الأقسام</option>
-          {departments.map((d, idx) => <option key={`${d}-${idx}`}>{d}</option>)}
+          {departmentNames.map((d, idx) => <option key={idx}>{d}</option>)}
         </select>
         <div className="flex gap-2 flex-wrap w-full sm:w-auto mr-0 sm:mr-auto">
           <span className="text-sm text-gray-500 self-center">تحديد الكل:</span>

@@ -4,7 +4,7 @@ import {
   Umbrella, LogOut, DollarSign, CreditCard, FileText, Scissors,
   Bus, Timer, FileCheck, Award, Target, Pill, Handshake, Flag, Gift, Scale, ArrowLeftRight,
   CheckSquare, FileBarChart, BarChart3, ChevronDown,
-  PanelLeftClose, PanelLeftOpen, X,
+  PanelLeftClose, PanelLeftOpen, X, Building2,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -23,6 +23,7 @@ const SECTIONS = [
     label: 'الموظفون',
     items: [
       { id: 'employees', label: 'بيانات الموظفين', icon: Users },
+      { id: 'departments', label: 'إدارة الأقسام', icon: Building2 },
       { id: 'attendance', label: 'الحضور والغياب', icon: ClipboardList },
       { id: 'fingerprintImport', label: 'استيراد البصمة', icon: Fingerprint },
       { id: 'absenceReport', label: 'تقرير الغائبين', icon: Ban },

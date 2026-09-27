@@ -6,7 +6,8 @@ const initialRequests = [
   { id: 2, requestNumber: 'تو-2026/002', department: 'التغليف', jobTitle: 'عاملة إنتاج', count: 5, currentCount: 25, targetCount: 30, requestedBy: 'أحمد محمود', requestDate: '2026-09-05', deadline: '2026-10-15', status: 'موافق', managerDecision: 'موافق بشرط التدريب' },
 ];
 
-const RecruitmentRequests = ({ recruitmentRequests, setRecruitmentRequests }) => {
+const RecruitmentRequests = ({ recruitmentRequests, setRecruitmentRequests, departments }) => {
+  const departmentNames = departments.map(d => d.name);
   const [requests, setRequests] = useState(recruitmentRequests?.length ? recruitmentRequests : initialRequests);
   const [showModal, setShowModal] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -226,7 +227,10 @@ const RecruitmentRequests = ({ recruitmentRequests, setRecruitmentRequests }) =>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-[#172B45] mb-1">القسم</label>
-                  <input type="text" value={form.department} onChange={e => setForm({...form, department: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:outline-none focus:border-[#3974B8]" />
+                  <select value={form.department} onChange={e => setForm({...form, department: e.target.value})} className="w-full px-4 py-2.5 rounded-xl border border-[#E2E8F0] focus:outline-none focus:border-[#3974B8]">
+                    <option value="">اختر القسم</option>
+                    {departmentNames.map((d, idx) => <option key={idx}>{d}</option>)}
+                  </select>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#172B45] mb-1">المسمى المطلوب</label>
