@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 
-const MedicalCases = ({ employees }) => {
-  const [cases, setCases] = useState([
-    { id: 1, employeeCode: '203012', employeeName: 'حنان عادل محمد', department: 'التغليف', condition: 'كسر في اليد', treatmentDate: '2026-02-10', amount: 2000, note: 'تم صرف ألفين جنيه', status: 'صُرف' },
-    { id: 2, employeeCode: '203222', employeeName: 'سالي بدر أحمد', department: 'الإنتاج', condition: 'إجراء عملية', treatmentDate: '2026-02-12', amount: 300, note: 'علاج وذهاب للمستشفى', status: 'صُرف' },
-    { id: 3, employeeCode: '106014', employeeName: 'محمد علي السيد', department: 'الحقن', condition: 'التهاب', treatmentDate: '2026-02-15', amount: 500, note: 'تقرير مرضي مقدَّم', status: 'معلق' },
-  ]);
+const MedicalCases = ({ medicalCases: casesProp = [], setMedicalCases: setCasesProp, employees = [] }) => {
+  const [localCases, setLocalCases] = useState(null);
+  const cases = localCases ?? casesProp;
+  const setCases = (fn) => {
+    const next = typeof fn === 'function' ? fn(cases) : fn;
+    setCasesProp && setCasesProp(next);
+    setLocalCases(next);
+  };
 
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ employeeCode: '', employeeName: '', department: '', condition: '', treatmentDate: '', amount: '', note: '', status: 'معلق' });

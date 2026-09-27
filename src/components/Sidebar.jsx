@@ -1,136 +1,269 @@
 import React, { useState } from 'react';
+import {
+  LayoutDashboard, Users, ClipboardList, Fingerprint, Ban, Clock,
+  Umbrella, LogOut, DollarSign, CreditCard, FileText, Scissors,
+  Bus, Timer, FileCheck, Award, Target, Pill, Handshake, Flag,
+  CheckSquare, FileBarChart, BarChart3, ChevronDown,
+  PanelLeftClose, PanelLeftOpen, X,
+} from 'lucide-react';
 
+// ---------------------------------------------------------------------------
+// Data. Kept outside the component so it isn't rebuilt on every render.
+// ---------------------------------------------------------------------------
+const SECTIONS = [
+  {
+    key: 'main',
+    label: null,
+    items: [
+      { id: 'dashboard', label: 'لوحة التحكم', icon: LayoutDashboard },
+    ],
+  },
+  {
+    key: 'employees',
+    label: 'الموظفون',
+    items: [
+      { id: 'employees', label: 'بيانات الموظفين', icon: Users },
+      { id: 'attendance', label: 'الحضور والغياب', icon: ClipboardList },
+      { id: 'fingerprintImport', label: 'استيراد البصمة', icon: Fingerprint },
+      { id: 'absenceReport', label: 'تقرير الغائبين', icon: Ban },
+      { id: 'delays', label: 'التأخيرات', icon: Clock },
+      { id: 'leaveBalance', label: 'رصيد الإجازات', icon: Umbrella },
+      { id: 'earlyDeparture', label: 'انصراف نصف يوم', icon: LogOut },
+    ],
+  },
+  {
+    key: 'financial',
+    label: 'المالية والرواتب',
+    items: [
+      { id: 'salaries', label: 'الرواتب والمستحقات', icon: DollarSign },
+      { id: 'loans', label: 'السلف الشهرية', icon: CreditCard },
+      { id: 'loansAdvanced', label: 'السلف العادية والاستثنائية', icon: FileText },
+      { id: 'deductions', label: 'الخصومات (انتاج)', icon: Scissors },
+      { id: 'transportation', label: 'بدل المواصلات', icon: Bus },
+      { id: 'overtime', label: 'الإضافي', icon: Timer },
+      { id: 'paymentForms', label: 'نماذج الصرف', icon: FileCheck },
+    ],
+  },
+  {
+    key: 'incentives',
+    label: 'الحوافز والمكافآت',
+    items: [
+      { id: 'incentives', label: 'حوافز الانتاج', icon: Award },
+      { id: 'fixedIncentives', label: 'حوافز الثابتة', icon: Target },
+    ],
+  },
+  {
+    key: 'welfare',
+    label: 'شؤون الموظفين',
+    items: [
+      { id: 'medicalCases', label: 'الحالات المرضية', icon: Pill },
+      { id: 'interviews', label: 'المقابلات والتوظيف', icon: Handshake },
+      { id: 'clearance', label: 'التصفية (نهاية الخدمة)', icon: Flag },
+    ],
+  },
+  {
+    key: 'tasks',
+    label: 'المتابعة والتقارير',
+    items: [
+      { id: 'tasks', label: 'المهام الشهرية', icon: CheckSquare },
+      { id: 'monthlyReport', label: 'الشيت الشهري للمدير', icon: FileBarChart },
+      { id: 'reports', label: 'التقارير', icon: BarChart3 },
+    ],
+  },
+];
+
+const sectionOf = (tabId) =>
+  SECTIONS.find((s) => s.items.some((i) => i.id === tabId))?.key ?? 'main';
+
+// ---------------------------------------------------------------------------
+// Sidebar
+// ---------------------------------------------------------------------------
 const Sidebar = ({ activeTab, setActiveTab }) => {
-  const [openSection, setOpenSection] = useState('main');
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [openSection, setOpenSection] = useState(() => sectionOf(activeTab));
 
-  const sections = [
-    {
-      key: 'main',
-      label: '',
-      items: [
-        { id: 'dashboard', label: 'لوحة التحكم', icon: '🏠' },
-      ]
-    },
-    {
-      key: 'employees',
-      label: '👥 الموظفون',
-      items: [
-        { id: 'employees', label: 'بيانات الموظفين', icon: '👤' },
-        { id: 'attendance', label: 'الحضور والغياب', icon: '📋' },
-        { id: 'absenceReport', label: 'تقرير الغائبين', icon: '🚫' },
-        { id: 'delays', label: 'التأخيرات', icon: '⏰' },
-        { id: 'leaveBalance', label: 'رصيد الإجازات', icon: '🏖️' },
-        { id: 'earlyDeparture', label: 'انصراف نصف يوم', icon: '🚪' },
-      ]
-    },
-    {
-      key: 'financial',
-      label: '💰 المالية والرواتب',
-      items: [
-        { id: 'salaries', label: 'الرواتب والمستحقات', icon: '💰' },
-        { id: 'loans', label: 'السلف الشهرية', icon: '💳' },
-        { id: 'loansAdvanced', label: 'السلف العادية والاستثنائية', icon: '📑' },
-        { id: 'deductions', label: 'الخصومات (انتاج)', icon: '✂️' },
-        { id: 'transportation', label: 'بدل المواصلات', icon: '🚌' },
-        { id: 'overtime', label: 'الإضافي', icon: '⌚' },
-      ]
-    },
-    {
-      key: 'incentives',
-      label: '🏆 الحوافز والمكافآت',
-      items: [
-        { id: 'incentives', label: 'حوافز الانتاج', icon: '🏭' },
-        { id: 'fixedIncentives', label: 'حوافز الثابتة', icon: '🎯' },
-      ]
-    },
-    {
-      key: 'welfare',
-      label: '🏥 شؤون الموظفين',
-      items: [
-        { id: 'medicalCases', label: 'الحالات المرضية', icon: '💊' },
-        { id: 'interviews', label: 'المقابلات والتوظيف', icon: '🤝' },
-      ]
-    },
-    {
-      key: 'tasks',
-      label: '📊 المتابعة والتقارير',
-      items: [
-        { id: 'tasks', label: 'المهام الشهرية', icon: '✅' },
-        { id: 'reports', label: 'التقارير', icon: '📊' },
-      ]
-    },
-  ];
+  const toggleSection = (key) =>
+    setOpenSection((prev) => (prev === key ? '' : key));
 
-  const toggleSection = (key) => {
-    setOpenSection(prev => prev === key ? '' : key);
+  const handleSelect = (id) => {
+    setActiveTab(id);
+    setMobileOpen(false);
+  };
+
+  const width = collapsed ? 'w-[76px]' : 'w-72';
+
+  const renderItem = (item) => {
+    const active = activeTab === item.id;
+    return (
+      <button
+        key={item.id}
+        onClick={() => handleSelect(item.id)}
+        title={collapsed ? item.label : undefined}
+        aria-current={active ? 'page' : undefined}
+        className={`
+          group relative w-full flex items-center gap-3 rounded-lg
+          text-sm transition-colors duration-150
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F9DDE]
+          ${collapsed ? 'justify-center px-0 py-2.5' : 'px-3 py-2.5'}
+          ${
+            active
+              ? 'bg-white/10 text-white font-medium'
+              : 'text-[#B9D3EC] hover:bg-white/5 hover:text-white'
+          }
+        `}
+      >
+        {active && (
+          <span className="absolute right-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-[#4F9DDE] transition-all duration-200" />
+        )}
+        <item.icon
+          size={collapsed ? 20 : 18}
+          strokeWidth={2}
+          className={`shrink-0 transition-colors duration-150 ${active ? 'text-[#7CC0F5]' : ''}`}
+        />
+        <span
+          className={`truncate transition-all duration-200 ${
+            collapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'
+          }`}
+        >
+          {item.label}
+        </span>
+
+        {collapsed && (
+          <span className="pointer-events-none absolute right-full mr-2 whitespace-nowrap rounded-md bg-[#0F2942] px-2 py-1 text-xs text-white opacity-0 translate-x-1 shadow-lg transition-all duration-150 group-hover:opacity-100 group-hover:translate-x-0 z-10">
+            {item.label}
+          </span>
+        )}
+      </button>
+    );
   };
 
   return (
-    <div className="w-64 bg-gradient-to-b from-blue-900 to-blue-800 text-white flex flex-col shadow-2xl min-h-screen">
-      {/* Logo */}
-      <div className="p-5 border-b border-blue-700">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-900 font-bold text-lg shadow">
+    <>
+      {/* Mobile scrim */}
+      <div
+        className={`fixed inset-0 z-40 bg-black/40 lg:hidden transition-opacity duration-300 ${
+          mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* Mobile trigger */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className={`fixed top-4 right-4 z-30 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#123256] text-white shadow-lg lg:hidden transition-opacity duration-200 ${
+          mobileOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
+        }`}
+        aria-label="فتح القائمة الجانبية"
+      >
+        <PanelLeftOpen size={18} sm:size={20} />
+      </button>
+
+      <aside
+        dir="rtl"
+        className={`
+          ${width} shrink-0 min-h-screen flex flex-col
+          bg-gradient-to-b from-[#0F2942] to-[#1B3D63] text-white
+          shadow-xl
+          fixed inset-y-0 right-0 z-50
+          transition-[width,transform] duration-300 ease-in-out
+          ${mobileOpen ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+        `}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 p-4 border-b border-white/10 overflow-hidden">
+          <div className="w-10 h-10 shrink-0 bg-white rounded-lg flex items-center justify-center text-[#123256] font-bold shadow">
             HR
           </div>
-          <div>
-            <div className="font-bold text-base leading-tight">نظام الموارد البشرية</div>
-            <div className="text-blue-300 text-xs">إدارة شاملة للعمالة</div>
+          <div
+            className={`min-w-0 flex-1 transition-all duration-200 ${
+              collapsed ? 'opacity-0 -translate-x-2 w-0' : 'opacity-100 translate-x-0 w-auto'
+            }`}
+          >
+            <div className="font-semibold text-sm leading-tight truncate">
+              نظام الموارد البشرية
+            </div>
+            <div className="text-[#6FA8DC] text-xs mt-0.5 truncate">
+              إدارة شاملة للعمالة
+            </div>
           </div>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="lg:hidden text-[#8FB8E0] hover:text-white p-1"
+            aria-label="إغلاق"
+          >
+            <X size={20} />
+          </button>
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 py-3 px-2 overflow-y-auto space-y-0.5">
-        {sections.map(section => (
-          <div key={section.key}>
-            {/* لوحة التحكم بدون header */}
-            {section.key === 'main' ? (
-              section.items.map(item => (
-                <button key={item.id} onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-right transition-all duration-200 mb-1 ${
-                    activeTab === item.id
-                      ? 'bg-white text-blue-900 shadow-lg font-semibold'
-                      : 'text-blue-100 hover:bg-blue-700 hover:text-white'
-                  }`}>
-                  <span className="text-lg">{item.icon}</span>
-                  <span className="text-sm">{item.label}</span>
-                </button>
-              ))
-            ) : (
-              <>
-                <button onClick={() => toggleSection(section.key)}
-                  className="w-full flex items-center justify-between px-3 py-2 mt-1 text-blue-300 hover:text-white text-xs font-semibold tracking-wide transition rounded-lg hover:bg-blue-800">
-                  <span>{section.label}</span>
-                  <span>{openSection === section.key ? '▾' : '▸'}</span>
-                </button>
-                {openSection === section.key && (
-                  <div className="space-y-0.5 mt-0.5">
-                    {section.items.map(item => (
-                      <button key={item.id} onClick={() => setActiveTab(item.id)}
-                        className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-right transition-all duration-200 ${
-                          activeTab === item.id
-                            ? 'bg-white text-blue-900 shadow-lg font-semibold'
-                            : 'text-blue-100 hover:bg-blue-700 hover:text-white'
-                        }`}>
-                        <span className="text-base">{item.icon}</span>
-                        <span className="text-sm">{item.label}</span>
-                      </button>
-                    ))}
+        {/* Navigation */}
+        <nav className="flex-1 py-3 px-2.5 overflow-y-auto overflow-x-hidden space-y-0.5">
+          {SECTIONS.map((section, idx) => {
+            const isMain = section.key === 'main';
+            const isOpen = isMain || openSection === section.key;
+
+            return (
+              <div key={section.key}>
+                {!isMain && collapsed && idx > 1 && (
+                  <div className="my-1.5 border-t border-white/10" />
+                )}
+
+                {!isMain && !collapsed && (
+                  <button
+                    onClick={() => toggleSection(section.key)}
+                    className="w-full flex items-center justify-between px-2.5 py-2 mt-3 text-[#6FA8DC] hover:text-white text-[11px] font-semibold tracking-wide rounded-lg hover:bg-white/5 transition-colors"
+                    aria-expanded={isOpen}
+                  >
+                    <span>{section.label}</span>
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform duration-300 ${
+                        isOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                )}
+
+                {isMain || collapsed ? (
+                  <div className="space-y-0.5">{section.items.map(renderItem)}</div>
+                ) : (
+                  // Grid-rows trick: animates 0fr -> 1fr so the group
+                  // expands/collapses smoothly without a fixed max-height.
+                  <div
+                    className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${
+                      isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                    }`}
+                  >
+                    <div className="overflow-hidden">
+                      <div className="space-y-0.5 mt-1">{section.items.map(renderItem)}</div>
+                    </div>
                   </div>
                 )}
-              </>
-            )}
-          </div>
-        ))}
-      </nav>
+              </div>
+            );
+          })}
+        </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-blue-700 text-center">
-        <div className="text-blue-300 text-xs">سبتمبر 2026</div>
-        <div className="text-blue-400 text-xs mt-0.5">إصدار 2.0</div>
-      </div>
-    </div>
+        {/* Footer */}
+        <div className="border-t border-white/10 p-3 flex items-center justify-between overflow-hidden">
+          <span
+            className={`text-[#5C82A8] text-xs whitespace-nowrap transition-all duration-200 ${
+              collapsed ? 'opacity-0 -translate-x-2 w-0' : 'opacity-100 translate-x-0 w-auto'
+            }`}
+          >
+            سبتمبر 2026 · إصدار 2.0
+          </span>
+          <button
+            onClick={() => setCollapsed((c) => !c)}
+            className="hidden lg:flex items-center justify-center w-8 h-8 rounded-lg text-[#8FB8E0] hover:bg-white/10 hover:text-white transition-colors shrink-0"
+            aria-label={collapsed ? 'توسيع القائمة' : 'طي القائمة'}
+          >
+            {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };
 

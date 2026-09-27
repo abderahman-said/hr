@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 
-const LeaveBalance = ({ employees }) => {
-  const [records, setRecords] = useState([
-    { id: 1, employeeCode: '203034', employeeName: 'صبري السيد شكري', type: 'انتاج', leaveType: 'رصيد', date: '2026-02-01', value: 150 },
-    { id: 2, employeeCode: '203099', employeeName: 'بلال السيد محمد', type: 'انتاج', leaveType: 'رصيد', date: '2026-02-01', value: 150 },
-    { id: 3, employeeCode: '203030', employeeName: 'طارق عطية محمد', type: 'ثابت', leaveType: 'رصيد _ض', date: '2026-03-01', value: 4 },
-    { id: 4, employeeCode: '103011', employeeName: 'رنا خالد السعودي', type: 'ثابت', leaveType: 'رصيد _ض', date: '2026-03-01', value: 2 },
-    { id: 5, employeeCode: '202043', employeeName: 'سلوي منجود محمد', type: 'انتاج', leaveType: 'غياب باذن', date: '2026-09-02', value: 1 },
-    { id: 6, employeeCode: '203012', employeeName: 'حنان عادل محمد', type: 'انتاج', leaveType: 'غياب باذن', date: '2026-09-05', value: 1 },
-    { id: 7, employeeCode: '203147', employeeName: 'محمد مجدي', type: 'انتاج', leaveType: 'بدون اذن', date: '2026-09-07', value: 1 },
-  ]);
+const LeaveBalance = ({ leaveBalance: leaveProp = [], setLeaveBalance: setLeaveProp, employees = [] }) => {
+  const [localRecords, setLocalRecords] = useState(null);
+  const records = localRecords ?? leaveProp;
+  const setRecords = (fn) => {
+    const next = typeof fn === 'function' ? fn(records) : fn;
+    setLeaveProp && setLeaveProp(next);
+    setLocalRecords(next);
+  };
 
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ employeeCode: '', employeeName: '', type: 'انتاج', leaveType: 'رصيد', date: '', value: '' });

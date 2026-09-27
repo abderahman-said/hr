@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 
-const Transportation = ({ employees }) => {
-  const [records, setRecords] = useState([
-    { id: 1, employeeCode: '202096', employeeName: 'بوسي فارس يوسف شحاته', department: 'تغليف', address: 'القاهرة', attendanceDays: 22, allowancePerDay: 10 },
-    { id: 2, employeeCode: '203025', employeeName: 'عزيزه موسي البكري', department: 'تغليف', address: 'الجيزة', attendanceDays: 20, allowancePerDay: 15 },
-    { id: 3, employeeCode: '202043', employeeName: 'سلوي منجود محمد', department: 'تغليف', address: 'القاهرة', attendanceDays: 24, allowancePerDay: 10 },
-    { id: 4, employeeCode: '203012', employeeName: 'حنان عادل محمد', department: 'تغليف', address: 'القليوبية', attendanceDays: 21, allowancePerDay: 12 },
-  ]);
+const Transportation = ({ transportation: transProp = [], setTransportation: setTransProp, employees = [] }) => {
+  const [localRecords, setLocalRecords] = useState(null);
+  const records = localRecords ?? transProp;
+  const setRecords = (fn) => {
+    const next = typeof fn === 'function' ? fn(records) : fn;
+    setTransProp && setTransProp(next);
+    setLocalRecords(next);
+  };
+
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ employeeCode: '', employeeName: '', department: '', address: '', attendanceDays: 26, allowancePerDay: 10 });
   const [search, setSearch] = useState('');

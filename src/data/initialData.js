@@ -18,6 +18,56 @@ export const initialEmployees = [
   { id: 14, code: '102002', fingerprint: '205', name: 'محمد فايز العراقي', department: 'الحسابات', type: 'ثابت', salary: 6000, status: 'يعمل', hireDate: '2016-09-01', phone: '01909876543', nationalId: '28801010456789' },
 ];
 
+// ===== بيانات التأخيرات =====
+export const initialDelays = [
+  { id: 1, fingerprint: '101', employeeCode: '202043', employeeName: 'سلوي منجود محمد', scheduledTime: '08:00', actualTime: '08:45', date: '2026-09-03', delayMinutes: 45 },
+  { id: 2, fingerprint: '102', employeeCode: '203012', employeeName: 'حنان عادل محمد', scheduledTime: '08:00', actualTime: '08:20', date: '2026-09-05', delayMinutes: 20 },
+  { id: 3, fingerprint: '201', employeeCode: '106014', employeeName: 'محمد علي السيد', scheduledTime: '09:00', actualTime: '09:30', date: '2026-09-08', delayMinutes: 30 },
+  { id: 4, fingerprint: '101', employeeCode: '202043', employeeName: 'سلوي منجود محمد', scheduledTime: '08:00', actualTime: '09:00', date: '2026-09-15', delayMinutes: 60 },
+];
+
+// ===== بيانات الإضافي =====
+export const initialOvertime = [
+  { id: 1, employeeCode: '202043', employeeName: 'سلوي منجود محمد', department: 'تغليف', salary: 918, hoursPerDay: 8, overtimeHours: 2, date: '2026-09-05', reason: 'الاجتهاد في العمل' },
+  { id: 2, employeeCode: '107011', employeeName: 'أحمد محمود إبراهيم', department: 'الحقن', salary: 4000, hoursPerDay: 8, overtimeHours: 1, date: '2026-09-10', reason: 'عمل إضافي' },
+  { id: 3, employeeCode: '106014', employeeName: 'محمد علي السيد', department: 'الحقن', salary: 3500, hoursPerDay: 8, overtimeHours: 3, date: '2026-09-12', reason: 'ضغط العمل' },
+];
+
+// ===== بيانات المواصلات =====
+export const initialTransportation = [
+  { id: 1, employeeCode: '202096', employeeName: 'بوسي فارس يوسف شحاته', department: 'تغليف', address: 'القاهرة', attendanceDays: 22, allowancePerDay: 10 },
+  { id: 2, employeeCode: '202043', employeeName: 'سلوي منجود محمد', department: 'تغليف', address: 'القاهرة', attendanceDays: 24, allowancePerDay: 10 },
+  { id: 3, employeeCode: '203012', employeeName: 'حنان عادل محمد', department: 'تغليف', address: 'القليوبية', attendanceDays: 21, allowancePerDay: 12 },
+];
+
+// ===== بيانات حوافز الثابتة =====
+export const initialFixedIncentives = [
+  { id: 1, employeeCode: '107011', employeeName: 'أحمد محمود إبراهيم', department: 'الحقن', jobTitle: 'مشرف', salary: 4000, incentiveHours: 8, date: '2026-09-01', reason: 'الاجتهاد في العمل' },
+  { id: 2, employeeCode: '106014', employeeName: 'محمد علي السيد', department: 'الحقن', jobTitle: 'عامل حقن', salary: 3500, incentiveHours: 4, date: '2026-09-15', reason: 'عمل إضافي' },
+];
+
+// ===== بيانات الغياب =====
+export const initialAbsences = [
+  { id: 1, employeeCode: '202043', employeeName: 'سلوي منجود محمد', department: 'التغليف', date: '2026-09-02', type: 'غياب باذن', reason: 'ظرف شخصي', permissionMethod: 'واتس قبل العمل', type_category: 'انتاج' },
+  { id: 2, employeeCode: '203012', employeeName: 'حنان عادل محمد', department: 'التغليف', date: '2026-09-05', type: 'غياب باذن', reason: 'مرضي', permissionMethod: 'واتس قبل العمل', type_category: 'انتاج' },
+  { id: 3, employeeCode: '106014', employeeName: 'محمد علي السيد', department: 'الحقن', date: '2026-09-10', type: 'بدون اذن', reason: '', permissionMethod: '', type_category: 'ثابت' },
+];
+
+// ===== بيانات رصيد الإجازات =====
+export const initialLeaveBalance = [
+  { id: 1, employeeCode: '202043', employeeName: 'سلوي منجود محمد', type: 'انتاج', leaveType: 'رصيد', date: '2026-01-01', value: 150 },
+  { id: 2, employeeCode: '106014', employeeName: 'محمد علي السيد', type: 'ثابت', leaveType: 'رصيد _ض', date: '2026-01-01', value: 4 },
+  { id: 3, employeeCode: '202043', employeeName: 'سلوي منجود محمد', type: 'انتاج', leaveType: 'غياب باذن', date: '2026-09-02', value: 1 },
+  { id: 4, employeeCode: '203012', employeeName: 'حنان عادل محمد', type: 'انتاج', leaveType: 'غياب باذن', date: '2026-09-05', value: 1 },
+  { id: 5, employeeCode: '106014', employeeName: 'محمد علي السيد', type: 'ثابت', leaveType: 'بدون اذن', date: '2026-09-10', value: 1 },
+];
+
+// ===== بيانات الحالات المرضية =====
+export const initialMedicalCases = [
+  { id: 1, employeeCode: '203012', employeeName: 'حنان عادل محمد', department: 'التغليف', condition: 'كسر في اليد', treatmentDate: '2026-02-10', amount: 2000, note: 'تم صرف ألفين جنيه', status: 'صُرف' },
+  { id: 2, employeeCode: '106014', employeeName: 'محمد علي السيد', department: 'الحقن', condition: 'التهاب', treatmentDate: '2026-02-15', amount: 500, note: 'تقرير مرضي مقدَّم', status: 'معلق' },
+];
+
 export const initialTasks = [
   { id: 1, task: 'استخراج مسير رواتب شهر سبتمبر', date: '2026-09-25', type: 'رواتب', note: 'ينتهي آخر الشهر', done: false },
   { id: 2, task: 'متابعة سلف الشهر', date: '2026-09-20', type: 'مالي', note: '', done: true },

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 
-const Overtime = ({ employees, setEmployees }) => {
-  const [records, setRecords] = useState([
-    { id: 1, employeeCode: '202043', employeeName: 'سلوي منجود محمد', department: 'تغليف', salary: 918, hoursPerDay: 8, overtimeHours: 2, date: '2026-09-05', reason: 'الاجتهاد في العمل' },
-    { id: 2, employeeCode: '203081', employeeName: 'حسام حمدان', department: 'المخازن', salary: 3000, hoursPerDay: 8, overtimeHours: 1, date: '2026-09-10', reason: 'عمل إضافي' },
-    { id: 3, employeeCode: '202105', employeeName: 'أحمد محمود', department: 'الحقن', salary: 3500, hoursPerDay: 8, overtimeHours: 3, date: '2026-09-12', reason: 'ضغط العمل' },
-  ]);
+const Overtime = ({ overtime: overtimeProp = [], setOvertime: setOvertimeProp, employees = [] }) => {
+  const [localRecords, setLocalRecords] = useState(null);
+  const records = localRecords ?? overtimeProp;
+  const setRecords = (fn) => {
+    const next = typeof fn === 'function' ? fn(records) : fn;
+    setOvertimeProp && setOvertimeProp(next);
+    setLocalRecords(next);
+  };
+
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ employeeCode: '', employeeName: '', department: '', salary: 0, hoursPerDay: 8, overtimeHours: 0, date: '', reason: '' });
   const [search, setSearch] = useState('');
@@ -45,19 +48,19 @@ const Overtime = ({ employees, setEmployees }) => {
   const totalHours = filtered.reduce((s, r) => s + Number(r.overtimeHours), 0);
 
   return (
-    <div className="p-6 space-y-5 fade-in">
-      <div className="flex justify-between items-center">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">الإضافي (Overtime)</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">الإضافي (Overtime)</h1>
           <p className="text-gray-500 text-sm">{filtered.length} سجل • {totalHours} ساعة • إجمالي {totalOvertime.toLocaleString()} ج</p>
         </div>
-        <button onClick={() => setShowModal(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-sm transition">
+        <button onClick={() => setShowModal(true)} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-sm transition text-sm">
           + إضافة إضافي
         </button>
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 text-center">
           <div className="text-2xl font-bold text-indigo-700">{totalHours}</div>
           <div className="text-indigo-500 text-sm mt-1">إجمالي الساعات</div>
@@ -73,9 +76,9 @@ const Overtime = ({ employees, setEmployees }) => {
       </div>
 
       {/* Search */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+      <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100">
         <input type="text" placeholder="🔍 بحث بالاسم أو الكود..." value={search} onChange={e => setSearch(e.target.value)}
-          className="border border-gray-200 rounded-xl px-4 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-300" />
+          className="border border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-300" />
       </div>
 
       {/* Table */}
@@ -140,10 +143,10 @@ const Overtime = ({ employees, setEmployees }) => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-lg font-bold text-gray-800">إضافة سجل إضافي</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-4 sm:p-6">
+            <div className="flex justify-between items-center mb-4 sm:mb-5">
+              <h2 className="text-base sm:text-lg font-bold text-gray-800">إضافة سجل إضافي</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
             </div>
             <div className="space-y-4">
@@ -182,9 +185,9 @@ const Overtime = ({ employees, setEmployees }) => {
                   className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300" placeholder="سبب الإضافي..." />
               </div>
             </div>
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition">إلغاء</button>
-              <button onClick={handleAdd} className="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition">حفظ</button>
+            <div className="flex gap-3 mt-4 sm:mt-6">
+              <button onClick={() => setShowModal(false)} className="flex-1 py-2 sm:py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition text-sm">إلغاء</button>
+              <button onClick={handleAdd} className="flex-1 py-2 sm:py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm transition text-sm">حفظ</button>
             </div>
           </div>
         </div>

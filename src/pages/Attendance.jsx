@@ -42,19 +42,19 @@ const Attendance = ({ employees }) => {
   };
 
   return (
-    <div className="p-6 space-y-5 fade-in">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 fade-in">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">الحضور والغياب</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">الحضور والغياب</h1>
           <p className="text-gray-500 text-sm">{filtered.length} موظف</p>
         </div>
         <input type="date" value={selectedDate} onChange={e => setSelectedDate(e.target.value)}
-          className="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
+          className="border border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
         {statusOptions.map(s => (
           <div key={s} className={`rounded-xl p-3 text-center border ${statusColors[s] || 'bg-gray-100 text-gray-600 border-gray-200'}`}>
             <div className="text-2xl font-bold">{summary[s] || 0}</div>
@@ -64,15 +64,15 @@ const Attendance = ({ employees }) => {
       </div>
 
       {/* Filters & Quick Actions */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-wrap gap-3 items-center">
-        <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+      <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100 flex flex-col sm:flex-wrap gap-3 items-start sm:items-center">
+        <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
           <option value="">كل الأقسام</option>
           {departments.map(d => <option key={d}>{d}</option>)}
         </select>
-        <div className="flex gap-2 mr-auto">
+        <div className="flex gap-2 flex-wrap w-full sm:w-auto mr-0 sm:mr-auto">
           <span className="text-sm text-gray-500 self-center">تحديد الكل:</span>
           {['حاضر', 'غائب'].map(s => (
-            <button key={s} onClick={() => markAll(s)} className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${statusColors[s]}`}>{s}</button>
+            <button key={s} onClick={() => markAll(s)} className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-medium border ${statusColors[s]}`}>{s}</button>
           ))}
         </div>
       </div>
@@ -139,7 +139,7 @@ const Attendance = ({ employees }) => {
 
       {/* Save Button */}
       <div className="flex justify-end">
-        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-xl font-medium shadow-sm transition flex items-center gap-2">
+        <button className="bg-green-600 hover:bg-green-700 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl font-medium shadow-sm transition flex items-center gap-2 text-sm">
           💾 حفظ سجل الحضور
         </button>
       </div>

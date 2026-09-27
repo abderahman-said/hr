@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 
-const Delays = ({ employees }) => {
-  const [records, setRecords] = useState([
-    { id: 1, fingerprint: '101', employeeCode: '202043', employeeName: 'سلوي منجود محمد', scheduledTime: '08:00', actualTime: '08:45', date: '2026-09-03', delayMinutes: 45 },
-    { id: 2, fingerprint: '102', employeeCode: '203012', employeeName: 'حنان عادل محمد', scheduledTime: '08:00', actualTime: '08:20', date: '2026-09-05', delayMinutes: 20 },
-    { id: 3, fingerprint: '201', employeeCode: '106014', employeeName: 'محمد علي السيد', scheduledTime: '09:00', actualTime: '09:30', date: '2026-09-08', delayMinutes: 30 },
-    { id: 4, fingerprint: '101', employeeCode: '202043', employeeName: 'سلوي منجود محمد', scheduledTime: '08:00', actualTime: '09:00', date: '2026-09-15', delayMinutes: 60 },
-  ]);
+// ===================================================
+// صفحة حساب التأخيرات — مع البيانات المشتركة
+// ===================================================
+const Delays = ({ delays = [], setDelays, employees = [] }) => {
+  const [records, setRecordsLocal] = useState(null);
+  const data = records ?? delays;
+  const setData = (fn) => {
+    const next = typeof fn === 'function' ? fn(data) : fn;
+    setDelays && setDelays(next);
+    setRecordsLocal(next);
+  };
+
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ fingerprint: '', employeeCode: '', employeeName: '', scheduledTime: '08:00', actualTime: '', date: '' });
   const [search, setSearch] = useState('');
   const [filterMonth, setFilterMonth] = useState('');
+  const [viewMode, setViewMode] = useState('detail');
 
   const calcDelay = (scheduled, actual) => {
     if (!scheduled || !actual) return 0;
@@ -32,22 +38,21 @@ const Delays = ({ employees }) => {
     const delay = calcDelay(form.scheduledTime, form.actualTime);
     if (delay <= 0) return alert('لا يوجد تأخير! وقت الحضور قبل أو يساوي الوقت المقرر');
     const emp = employees.find(e => e.code === form.employeeCode);
-    setRecords(prev => [...prev, { ...form, id: Date.now(), delayMinutes: delay, employeeName: emp?.name || form.employeeName }]);
+    setData(prev => [...prev, { ...form, id: Date.now(), delayMinutes: delay, employeeName: emp?.name || form.employeeName }]);
     setForm({ fingerprint: '', employeeCode: '', employeeName: '', scheduledTime: '08:00', actualTime: '', date: '' });
     setShowModal(false);
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('حذف هذا السجل؟')) setRecords(prev => prev.filter(r => r.id !== id));
+    if (window.confirm('حذف هذا السجل؟')) setData(prev => prev.filter(r => r.id !== id));
   };
 
-  const filtered = records.filter(r => {
+  const filtered = data.filter(r => {
     const matchSearch = r.employeeName.includes(search) || r.employeeCode.includes(search);
     const matchMonth = !filterMonth || r.date.startsWith(filterMonth);
     return matchSearch && matchMonth;
   });
 
-  // Summary per employee
   const employeeSummary = {};
   filtered.forEach(r => {
     if (!employeeSummary[r.employeeCode]) {
@@ -58,22 +63,21 @@ const Delays = ({ employees }) => {
   });
 
   const totalMinutes = filtered.reduce((s, r) => s + r.delayMinutes, 0);
-  const [viewMode, setViewMode] = useState('detail'); // 'detail' or 'summary'
 
   return (
-    <div className="p-6 space-y-5 fade-in">
-      <div className="flex justify-between items-center">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">حساب التأخيرات</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">حساب التأخيرات</h1>
           <p className="text-gray-500 text-sm">{filtered.length} سجل • إجمالي {totalMinutes} دقيقة تأخير</p>
         </div>
-        <button onClick={() => setShowModal(true)} className="bg-yellow-600 hover:bg-yellow-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-sm transition">
+        <button onClick={() => setShowModal(true)} className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-sm transition text-sm">
           + تسجيل تأخير
         </button>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4 text-center">
           <div className="text-2xl font-bold text-yellow-700">{filtered.length}</div>
           <div className="text-yellow-500 text-sm mt-1">سجلات التأخير</div>
@@ -93,14 +97,14 @@ const Delays = ({ employees }) => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-wrap gap-3">
+      <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100 flex flex-col sm:flex-wrap gap-3">
         <input type="text" placeholder="🔍 بحث..." value={search} onChange={e => setSearch(e.target.value)}
-          className="border border-gray-200 rounded-xl px-4 py-2 text-sm flex-1 min-w-40 focus:outline-none focus:ring-2 focus:ring-yellow-300" />
+          className="border border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm flex-1 min-w-40 focus:outline-none focus:ring-2 focus:ring-yellow-300" />
         <input type="month" value={filterMonth} onChange={e => setFilterMonth(e.target.value)}
-          className="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300" />
-        <div className="flex gap-2">
-          <button onClick={() => setViewMode('detail')} className={`px-3 py-2 rounded-xl text-sm ${viewMode === 'detail' ? 'bg-yellow-600 text-white' : 'bg-gray-100 text-gray-600'}`}>تفصيلي</button>
-          <button onClick={() => setViewMode('summary')} className={`px-3 py-2 rounded-xl text-sm ${viewMode === 'summary' ? 'bg-yellow-600 text-white' : 'bg-gray-100 text-gray-600'}`}>ملخص</button>
+          className="border border-gray-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300" />
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button onClick={() => setViewMode('detail')} className={`flex-1 sm:flex-none px-3 py-2 rounded-xl text-sm ${viewMode === 'detail' ? 'bg-yellow-600 text-white' : 'bg-gray-100 text-gray-600'}`}>تفصيلي</button>
+          <button onClick={() => setViewMode('summary')} className={`flex-1 sm:flex-none px-3 py-2 rounded-xl text-sm ${viewMode === 'summary' ? 'bg-yellow-600 text-white' : 'bg-gray-100 text-gray-600'}`}>ملخص</button>
         </div>
       </div>
 
@@ -170,7 +174,7 @@ const Delays = ({ employees }) => {
                 <th className="px-4 py-3 text-right font-semibold text-gray-600">مرات التأخير</th>
                 <th className="px-4 py-3 text-right font-semibold text-gray-600">إجمالي الدقائق</th>
                 <th className="px-4 py-3 text-right font-semibold text-gray-600">إجمالي الساعات</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600">التصنيف</th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-600">خصم مقترح</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
@@ -191,9 +195,9 @@ const Delays = ({ employees }) => {
                     <td className="px-4 py-3 font-bold text-yellow-700">{emp.totalMinutes} دقيقة</td>
                     <td className="px-4 py-3 text-gray-600">{hrs}:{String(mins).padStart(2,'0')}</td>
                     <td className="px-4 py-3">
-                      {emp.totalMinutes >= 60 ? (
+                      {deduction > 0 ? (
                         <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-medium">
-                          خصم مقترح: {deduction} ج
+                          {deduction} ج
                         </span>
                       ) : (
                         <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">منتظم</span>
@@ -209,10 +213,10 @@ const Delays = ({ employees }) => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="text-lg font-bold text-gray-800">تسجيل تأخير</h2>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-4 sm:p-6">
+            <div className="flex justify-between items-center mb-4 sm:mb-5">
+              <h2 className="text-base sm:text-lg font-bold text-gray-800">تسجيل تأخير</h2>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
             </div>
             <div className="space-y-4">
@@ -220,7 +224,7 @@ const Delays = ({ employees }) => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">الموظف</label>
                 <select value={form.employeeCode} onChange={e => {
                   const emp = employees.find(emp => emp.code === e.target.value);
-                  setForm(prev => ({ ...prev, employeeCode: e.target.value, employeeName: emp?.name || '', scheduledTime: '08:00' }));
+                  setForm(prev => ({ ...prev, employeeCode: e.target.value, employeeName: emp?.name || '', fingerprint: emp?.fingerprint || '', scheduledTime: '08:00' }));
                 }} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300">
                   <option value="">اختر الموظف</option>
                   {employees.map(e => <option key={e.id} value={e.code}>{e.name} ({e.code})</option>)}
@@ -256,9 +260,9 @@ const Delays = ({ employees }) => {
                 </div>
               )}
             </div>
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition">إلغاء</button>
-              <button onClick={handleAdd} className="flex-1 py-2.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-xl font-medium shadow-sm transition">حفظ</button>
+            <div className="flex gap-3 mt-4 sm:mt-6">
+              <button onClick={() => setShowModal(false)} className="flex-1 py-2 sm:py-2.5 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition text-sm">إلغاء</button>
+              <button onClick={handleAdd} className="flex-1 py-2 sm:py-2.5 bg-yellow-600 hover:bg-yellow-700 text-white rounded-xl font-medium shadow-sm transition text-sm">حفظ</button>
             </div>
           </div>
         </div>

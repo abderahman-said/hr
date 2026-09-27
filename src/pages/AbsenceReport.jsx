@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
-const AbsenceReport = ({ employees }) => {
-  const [records, setRecords] = useState([
-    { id: 1, employeeCode: '202043', employeeName: 'سلوي منجود محمد', department: 'الإنتاج', date: '2026-09-02', type: 'غياب باذن', reason: 'ظرف شخصي', permissionMethod: 'واتس قبل العمل', type_category: 'انتاج' },
-    { id: 2, employeeCode: '203012', employeeName: 'حنان عادل محمد', department: 'الإنتاج', date: '2026-09-05', type: 'غياب باذن', reason: 'مرضي', permissionMethod: 'واتس قبل العمل', type_category: 'انتاج' },
-    { id: 3, employeeCode: '203147', employeeName: 'محمد مجدي', department: 'الإنتاج', date: '2026-09-07', type: 'بدون اذن', reason: '', permissionMethod: '', type_category: 'انتاج' },
-    { id: 4, employeeCode: '106014', employeeName: 'محمد علي السيد', department: 'الحقن', date: '2026-09-10', type: 'غياب باذن', reason: 'إجازة سنوية', permissionMethod: 'طلب رسمي', type_category: 'ثابت' },
-    { id: 5, employeeCode: '107011', employeeName: 'أحمد محمود إبراهيم', department: 'الحقن', date: '2026-09-15', type: 'بدون اذن', reason: '', permissionMethod: '', type_category: 'ثابت' },
-  ]);
+const AbsenceReport = ({ absences: absencesProp = [], setAbsences: setAbsencesProp, employees = [] }) => {
+  const [localRecords, setLocalRecords] = useState(null);
+  const records = localRecords ?? absencesProp;
+  const setRecords = (fn) => {
+    const next = typeof fn === 'function' ? fn(records) : fn;
+    setAbsencesProp && setAbsencesProp(next);
+    setLocalRecords(next);
+  };
+
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ employeeCode: '', employeeName: '', department: '', date: '', type: 'غياب باذن', reason: '', permissionMethod: '', type_category: 'انتاج' });
   const [search, setSearch] = useState('');

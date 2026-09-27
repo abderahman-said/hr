@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 
-const FixedIncentives = ({ employees }) => {
-  const [records, setRecords] = useState([
-    { id: 1, employeeCode: '203060', employeeName: 'أحمد سامي', department: 'المبيعات', jobTitle: 'مندوب مبيعات', salary: 4000, incentiveHours: 8, date: '2026-09-01', reason: 'الاجتهاد في العمل' },
-    { id: 2, employeeCode: '107011', employeeName: 'أحمد محمود إبراهيم', department: 'الحقن', jobTitle: 'مشرف', salary: 4000, incentiveHours: 8, date: '2026-09-01', reason: 'الاجتهاد في العمل' },
-    { id: 3, employeeCode: '106014', employeeName: 'محمد علي السيد', department: 'الحقن', jobTitle: 'عامل حقن', salary: 3500, incentiveHours: 4, date: '2026-09-15', reason: 'عمل إضافي' },
-  ]);
+const FixedIncentives = ({ fixedIncentives: fixedProp = [], setFixedIncentives: setFixedProp, employees = [] }) => {
+  const [localRecords, setLocalRecords] = useState(null);
+  const records = localRecords ?? fixedProp;
+  const setRecords = (fn) => {
+    const next = typeof fn === 'function' ? fn(records) : fn;
+    setFixedProp && setFixedProp(next);
+    setLocalRecords(next);
+  };
+
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ employeeCode: '', employeeName: '', department: '', jobTitle: '', salary: 0, incentiveHours: 0, date: '', reason: '' });
   const [search, setSearch] = useState('');

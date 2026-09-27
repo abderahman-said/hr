@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { departments } from '../data/initialData';
+import { Search, Plus, LayoutGrid, Table, Pencil, Trash2, X, Building2, HardHat, Briefcase, Phone, DollarSign, Calendar, UserCheck, UserX } from 'lucide-react';
 
 const Employees = ({ employees, setEmployees }) => {
   const [search, setSearch] = useState('');
@@ -41,80 +42,91 @@ const Employees = ({ employees, setEmployees }) => {
   };
 
   return (
-    <div className="p-6 space-y-5 fade-in">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-5 fade-in">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">بيانات الموظفين</h1>
-          <p className="text-gray-500 text-sm">{filtered.length} موظف</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#172B45]">بيانات الموظفين</h1>
+          <p className="text-[#718096] text-sm">{filtered.length} موظف</p>
         </div>
-        <button onClick={openAdd} className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-sm transition">
-          <span>+</span> إضافة موظف
+        <button onClick={openAdd} className="bg-gradient-to-r from-[#163A63] to-[#214B78] hover:from-[#214B78] hover:to-[#3974B8] text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl font-medium flex items-center gap-2 shadow-md transition text-sm">
+          <Plus size={16} sm:size={18} strokeWidth={2} /> إضافة موظف
         </button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-wrap gap-3 items-center">
-        <input
-          type="text"
-          placeholder="🔍 بحث بالاسم أو الكود..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="border border-gray-200 rounded-xl px-4 py-2 text-sm flex-1 min-w-48 focus:outline-none focus:ring-2 focus:ring-blue-300"
-        />
-        <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+      <div className="bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-[#E2E8F0] flex flex-col sm:flex-wrap gap-3 items-start sm:items-center">
+        <div className="relative flex-1 min-w-48 w-full sm:w-auto">
+          <Search size={16} sm:size={18} strokeWidth={2} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#718096]" />
+          <input
+            type="text"
+            placeholder="بحث بالاسم أو الكود..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="border border-[#E2E8F0] rounded-xl px-10 py-2 sm:py-2.5 text-sm flex-1 min-w-48 focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10"
+          />
+        </div>
+        <select value={filterDept} onChange={e => setFilterDept(e.target.value)} className="border border-[#E2E8F0] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
           <option value="">كل الأقسام</option>
           {departments.map(d => <option key={d}>{d}</option>)}
         </select>
-        <select value={filterType} onChange={e => setFilterType(e.target.value)} className="border border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+        <select value={filterType} onChange={e => setFilterType(e.target.value)} className="border border-[#E2E8F0] rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
           <option value="">كل الأنواع</option>
           <option>انتاج</option>
           <option>ثابت</option>
         </select>
-        <div className="flex gap-2">
-          <button onClick={() => setViewMode('table')} className={`px-3 py-2 rounded-xl text-sm ${viewMode === 'table' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'}`}>جدول</button>
-          <button onClick={() => setViewMode('cards')} className={`px-3 py-2 rounded-xl text-sm ${viewMode === 'cards' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'}`}>بطاقات</button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <button onClick={() => setViewMode('table')} className={`flex-1 sm:flex-none px-3 py-2 rounded-xl text-sm flex items-center justify-center gap-1.5 transition ${viewMode === 'table' ? 'bg-[#163A63] text-white' : 'bg-[#F5F7FA] text-[#718096] hover:bg-[#E2E8F0]'}`}>
+            <Table size={14} sm:size={16} strokeWidth={2} /> جدول
+          </button>
+          <button onClick={() => setViewMode('cards')} className={`flex-1 sm:flex-none px-3 py-2 rounded-xl text-sm flex items-center justify-center gap-1.5 transition ${viewMode === 'cards' ? 'bg-[#163A63] text-white' : 'bg-[#F5F7FA] text-[#718096] hover:bg-[#E2E8F0]'}`}>
+            <LayoutGrid size={14} sm:size={16} strokeWidth={2} /> بطاقات
+          </button>
         </div>
       </div>
 
       {/* Table View */}
       {viewMode === 'table' && (
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">#</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">الكود</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">الاسم</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">القسم</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">النوع</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">الراتب</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">الحالة</th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-600">إجراءات</th>
+                <tr className="bg-[#F5F7FA] border-b border-[#E2E8F0]">
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">#</th>
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">الكود</th>
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">الاسم</th>
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">القسم</th>
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">النوع</th>
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">الراتب</th>
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">الحالة</th>
+                  <th className="px-4 py-3 text-right font-semibold text-[#718096]">إجراءات</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-[#E2E8F0]">
                 {filtered.map((emp, i) => (
-                  <tr key={emp.id} className="hover:bg-gray-50 transition">
-                    <td className="px-4 py-3 text-gray-500">{i + 1}</td>
-                    <td className="px-4 py-3 font-mono text-blue-600 font-semibold">{emp.code}</td>
-                    <td className="px-4 py-3 font-medium text-gray-800">{emp.name}</td>
-                    <td className="px-4 py-3 text-gray-600">{emp.department}</td>
+                  <tr key={emp.id} className="hover:bg-[#F5F7FA] transition">
+                    <td className="px-4 py-3 text-[#718096]">{i + 1}</td>
+                    <td className="px-4 py-3 font-mono text-[#163A63] font-semibold">{emp.code}</td>
+                    <td className="px-4 py-3 font-medium text-[#172B45]">{emp.name}</td>
+                    <td className="px-4 py-3 text-[#718096]">{emp.department}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${emp.type === 'انتاج' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${emp.type === 'انتاج' ? 'bg-[#163A63]/10 text-[#163A63]' : 'bg-[#8B5CF6]/10 text-[#8B5CF6]'}`}>
                         {emp.type}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-semibold text-green-600">{Number(emp.salary).toLocaleString()} ج</td>
+                    <td className="px-4 py-3 font-semibold text-[#10B981]">{Number(emp.salary).toLocaleString()} ج</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${emp.status === 'يعمل' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${emp.status === 'يعمل' ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-[#EF4444]/10 text-[#EF4444]'}`}>
                         {emp.status}
                       </span>
                     </td>
                     <td className="px-4 py-3 flex gap-2">
-                      <button onClick={() => openEdit(emp)} className="text-blue-600 hover:bg-blue-50 p-1.5 rounded-lg transition">✏️</button>
-                      <button onClick={() => handleDelete(emp.id)} className="text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition">🗑️</button>
+                      <button onClick={() => openEdit(emp)} className="text-[#163A63] hover:bg-[#163A63]/10 p-1.5 rounded-lg transition">
+                        <Pencil size={16} strokeWidth={2} />
+                      </button>
+                      <button onClick={() => handleDelete(emp.id)} className="text-[#EF4444] hover:bg-[#EF4444]/10 p-1.5 rounded-lg transition">
+                        <Trash2 size={16} strokeWidth={2} />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -122,34 +134,38 @@ const Employees = ({ employees, setEmployees }) => {
             </table>
           </div>
           {filtered.length === 0 && (
-            <div className="text-center py-10 text-gray-400">لا توجد نتائج</div>
+            <div className="text-center py-10 text-[#718096]">لا توجد نتائج</div>
           )}
         </div>
       )}
 
       {/* Cards View */}
       {viewMode === 'cards' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {filtered.map(emp => (
-            <div key={emp.id} className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition">
+            <div key={emp.id} className="bg-white rounded-2xl p-5 shadow-sm border border-[#E2E8F0] hover:shadow-md transition">
               <div className="flex justify-between items-start mb-3">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl">
-                  {emp.type === 'انتاج' ? '👷' : '👔'}
+                <div className="w-12 h-12 bg-[#163A63]/10 rounded-xl flex items-center justify-center text-[#163A63]">
+                  {emp.type === 'انتاج' ? <HardHat size={24} strokeWidth={2} /> : <Briefcase size={24} strokeWidth={2} />}
                 </div>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${emp.status === 'يعمل' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${emp.status === 'يعمل' ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-[#EF4444]/10 text-[#EF4444]'}`}>
                   {emp.status}
                 </span>
               </div>
-              <h3 className="font-bold text-gray-800 mb-1">{emp.name}</h3>
-              <p className="text-blue-600 text-sm font-mono mb-2">{emp.code}</p>
-              <div className="text-sm text-gray-500 space-y-1">
-                <div>🏭 {emp.department} • {emp.type}</div>
-                <div>💰 {Number(emp.salary).toLocaleString()} جنيه</div>
-                {emp.phone && <div>📱 {emp.phone}</div>}
+              <h3 className="font-bold text-[#172B45] mb-1">{emp.name}</h3>
+              <p className="text-[#163A63] text-sm font-mono mb-2">{emp.code}</p>
+              <div className="text-sm text-[#718096] space-y-1">
+                <div className="flex items-center gap-1.5"><Building2 size={14} strokeWidth={2} /> {emp.department} • {emp.type}</div>
+                <div className="flex items-center gap-1.5"><DollarSign size={14} strokeWidth={2} /> {Number(emp.salary).toLocaleString()} جنيه</div>
+                {emp.phone && <div className="flex items-center gap-1.5"><Phone size={14} strokeWidth={2} /> {emp.phone}</div>}
               </div>
               <div className="flex gap-2 mt-4">
-                <button onClick={() => openEdit(emp)} className="flex-1 text-center text-blue-600 hover:bg-blue-50 py-1.5 rounded-lg text-sm border border-blue-200 transition">تعديل</button>
-                <button onClick={() => handleDelete(emp.id)} className="flex-1 text-center text-red-500 hover:bg-red-50 py-1.5 rounded-lg text-sm border border-red-200 transition">حذف</button>
+                <button onClick={() => openEdit(emp)} className="flex-1 text-center text-[#163A63] hover:bg-[#163A63]/10 py-2 rounded-lg text-sm border border-[#163A63]/20 transition flex items-center justify-center gap-1.5">
+                  <Pencil size={14} strokeWidth={2} /> تعديل
+                </button>
+                <button onClick={() => handleDelete(emp.id)} className="flex-1 text-center text-[#EF4444] hover:bg-[#EF4444]/10 py-2 rounded-lg text-sm border border-[#EF4444]/20 transition flex items-center justify-center gap-1.5">
+                  <Trash2 size={14} strokeWidth={2} /> حذف
+                </button>
               </div>
             </div>
           ))}
@@ -160,11 +176,13 @@ const Employees = ({ employees, setEmployees }) => {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-              <h2 className="text-lg font-bold text-gray-800">{editingEmp ? 'تعديل بيانات موظف' : 'إضافة موظف جديد'}</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
+            <div className="p-4 sm:p-6 border-b border-[#E2E8F0] flex justify-between items-center">
+              <h2 className="text-base sm:text-lg font-bold text-[#172B45]">{editingEmp ? 'تعديل بيانات موظف' : 'إضافة موظف جديد'}</h2>
+              <button onClick={() => setShowModal(false)} className="text-[#718096] hover:text-[#172B45] transition">
+                <X size={20} sm:size={24} strokeWidth={2} />
+              </button>
             </div>
-            <div className="p-6 grid grid-cols-2 gap-4">
+            <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { label: 'الاسم الكامل *', key: 'name', type: 'text' },
                 { label: 'الكود *', key: 'code', type: 'text' },
@@ -175,41 +193,41 @@ const Employees = ({ employees, setEmployees }) => {
                 { label: 'تاريخ التعيين', key: 'hireDate', type: 'date' },
               ].map(f => (
                 <div key={f.key} className={f.key === 'name' ? 'col-span-2' : ''}>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">{f.label}</label>
+                  <label className="block text-sm font-medium text-[#718096] mb-1">{f.label}</label>
                   <input
                     type={f.type}
                     value={form[f.key] || ''}
                     onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="w-full border border-[#E2E8F0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10"
                   />
                 </div>
               ))}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">القسم</label>
-                <select value={form.department} onChange={e => setForm(prev => ({ ...prev, department: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <label className="block text-sm font-medium text-[#718096] mb-1">القسم</label>
+                <select value={form.department} onChange={e => setForm(prev => ({ ...prev, department: e.target.value }))} className="w-full border border-[#E2E8F0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
                   <option value="">اختر القسم</option>
                   {departments.map(d => <option key={d}>{d}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">النوع</label>
-                <select value={form.type} onChange={e => setForm(prev => ({ ...prev, type: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <label className="block text-sm font-medium text-[#718096] mb-1">النوع</label>
+                <select value={form.type} onChange={e => setForm(prev => ({ ...prev, type: e.target.value }))} className="w-full border border-[#E2E8F0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
                   <option>انتاج</option>
                   <option>ثابت</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">الحالة</label>
-                <select value={form.status} onChange={e => setForm(prev => ({ ...prev, status: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <label className="block text-sm font-medium text-[#718096] mb-1">الحالة</label>
+                <select value={form.status} onChange={e => setForm(prev => ({ ...prev, status: e.target.value }))} className="w-full border border-[#E2E8F0] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#3974B8] focus:ring-2 focus:ring-[#3974B8]/10">
                   <option>يعمل</option>
                   <option>لا يعمل</option>
                   <option>تصفية</option>
                 </select>
               </div>
             </div>
-            <div className="p-6 border-t border-gray-100 flex gap-3 justify-end">
-              <button onClick={() => setShowModal(false)} className="px-5 py-2 border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition">إلغاء</button>
-              <button onClick={handleSave} className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium shadow-sm transition">حفظ</button>
+            <div className="p-4 sm:p-6 border-t border-[#E2E8F0] flex gap-3 justify-end">
+              <button onClick={() => setShowModal(false)} className="px-4 sm:px-5 py-2 sm:py-2.5 border border-[#E2E8F0] rounded-xl text-[#718096] hover:bg-[#F5F7FA] transition text-sm">إلغاء</button>
+              <button onClick={handleSave} className="px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-[#163A63] to-[#214B78] hover:from-[#214B78] hover:to-[#3974B8] text-white rounded-xl font-medium shadow-md transition text-sm">حفظ</button>
             </div>
           </div>
         </div>

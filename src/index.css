@@ -1,50 +1,77 @@
 @import "tailwindcss";
-
-* {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap');
+ 
 
 body {
   direction: rtl;
-  background-color: #f1f5f9;
+  background-color: #F5F7FA;
+  color: #172B45;
+  font-family: 'Tajawal',  sans-serif !important;
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #F0F4F8;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
-  border-radius: 4px;
+  background: #718096;
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #214B78;
 }
 
 .fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.4s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+.stat-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .stat-card:hover {
-  transform: translateY(-2px);
-  transition: transform 0.2s ease;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(22, 58, 99, 0.1), 0 4px 6px -4px rgba(22, 58, 99, 0.1);
 }
 
 input[type="text"],
 input[type="number"],
 input[type="date"],
+input[type="email"],
+input[type="tel"],
 select,
 textarea {
   direction: rtl;
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #3974B8;
+  box-shadow: 0 0 0 3px rgba(57, 116, 184, 0.1);
+}
+
+button {
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.98);
 }
